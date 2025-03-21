@@ -1,40 +1,30 @@
 import fs from "fs/promises";
-import { Bitmap } from "./bitmap-object.js";
-import { transform } from "./transform.js";
+import { readColorPalette, transform } from "./utils.js";
 
-// Function to extract the color palette
-const readColorPalette = (buff) => {
-  for (let i = 54; i < 182; i += 4) {
-    palette.push([
-      buff.readUInt8(i),
-      buff.readUInt8(i + 1),
-      buff.readUInt8(i + 2),
-      0,
-    ]);
-  }
-};
-
-async function processBitmap() {
+const processBitmap = async (bmpImgPath) => {
   try {
     // Read the bitmap file into a buffer
-    const buffer = await fs.readFile("./img/bitmap1.bmp");
-
-    // Convert buffer into a JavaScript object
-    const bitmapData = new Bitmap(buffer);
+    const buffer = await fs.readFile(bmpImgPath);
 
     // Create an array to hold the color palette
     let palette = [];
 
     // Read color palette
-    readColorPalette(buffer);
+    readColorPalette(buffer, palette);
 
     // Apply transformation to the palette
     transform(palette);
 
-    // TODO: Convert the transformed palette back into the buffer
+    // Convert the transformed palette back into the buffer
+    palette.forEach((color, index) => {
+      const offset = 54 + index * 4;
+      buffer.writeUInt8(color[0], offset);
+      buffer.writeUInt8(color[1], offset + 1);
+      buffer.writeUInt8(color[2], offset + 2);
+    });
 
-    // TODO: Write the transformed buffer to a new file
-
+    // Write the transformed buffer to a new file
+    await fs.writeFile("./assets/transformedFruit.bmp", buffer);
     console.log(
       "Transformation complete! Check the img folder for the new bitmap."
     );
@@ -44,4 +34,4 @@ async function processBitmap() {
 }
 
 // Run the function
-processBitmap();
+processBitmap(process.argv[2]);
