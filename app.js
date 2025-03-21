@@ -15,16 +15,9 @@ const processBitmap = async (bmpImgPath) => {
     // Apply transformation to the palette
     transform(palette);
 
-    // Convert the transformed palette back into the buffer
-    palette.forEach((color, index) => {
-      const offset = 54 + index * 4;
-      buffer.writeUInt8(color[0], offset);
-      buffer.writeUInt8(color[1], offset + 1);
-      buffer.writeUInt8(color[2], offset + 2);
-    });
+    // TODO: Convert the transformed palette back into the buffer
 
-    // Write the transformed buffer to a new file
-    await fs.writeFile("./assets/transformedFruit.bmp", buffer);
+    // TODO: Write the transformed buffer to a new file
     console.log(
       "Transformation complete! Check the img folder for the new bitmap."
     );
