@@ -1,13 +1,6 @@
 // Function to extract the color palette
 export const readColorPalette = (buff, palette) => {
-  for (let i = 54; i < 182; i += 4) {
-    palette.push([
-      buff.readUInt8(i),
-      buff.readUInt8(i + 1),
-      buff.readUInt8(i + 2),
-      0,
-    ]);
-  }
+  // TODO: Research how to read the color palette from a bitmap file and implement it
 };
 
 // Recognize this shuffle?
